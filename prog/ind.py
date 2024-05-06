@@ -9,7 +9,7 @@ E = 10e-7
 
 def main():
     results = [1]
-    x = 1
+    x = 4
 
     def calculate_sum(x):
         return 3**x
@@ -39,7 +39,7 @@ def main():
         results.append(0)
         calculate_part(results, i + 1, x, i + 1)
         i += 1
-
+    print(f'x = {x}')
     print(round(sum(results), 5))
     print(round(sum(results), 5) == calculate_sum(x))
 
