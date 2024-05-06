@@ -34,10 +34,6 @@ def main():
         th2.start()
         th3.start()
 
-        th1.join()
-        th2.join()
-        th3.join()
-
     i = 0
     while results[i] > E:
         results.append(0)
