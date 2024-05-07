@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+# С использованием многопоточности для заданного значения x
+# найти сумму ряда S с точностью члена ряда по
+# абсолютному значению E = 10e-7 и произвести сравнение
+# полученной суммы с контрольным значением функции
+# для двух бесконечных рядов.
+
 import math
 import threading
 
@@ -38,7 +44,7 @@ def calculate_part(results, index, x, cur):
 
 
 def main():
-    x = 4
+    x = 10
     i = 0
     while results[i] > E:
         results.append(0)
