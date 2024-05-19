@@ -8,53 +8,61 @@
 # для двух бесконечных рядов.
 
 import math
-import threading
+from threading import Thread
 
 E = 10e-7
-results = [1]
 
 
-def calculate_sum(x):
-    return 3**x
+# 1 Вариант
+def calculate_row_1(target, x):
+    def calculate_nextpart(results, x, cur):
+        return results[-1] * x * math.log(3) / cur
+
+    def control_value(x):
+        return 3**x
+
+    i = 0
+
+    local_result = [1]
+    while local_result[i] > E:
+        local_result.append(calculate_nextpart(local_result, x, i + 1))
+        i += 1
+    
+    target["sum_row_1"] = sum(local_result)
 
 
-def calculate_part(results, index, x, cur):
-    results[index] = 1
+# 2 Вариант
+def calculate_row_2(target, x):
+    def calculate_nextpart(results, x):
+        return results[-1] * x
 
-    def my_log():
-        results[index] *= math.pow(math.log(3), cur)
+    def control_value(x):
+        return round(1 / (1 - x), 4)
 
-    def my_pow():
-        results[index] *= x**cur
-
-    def my_fact():
-        results[index] /= math.factorial(cur)
-
-    th1 = threading.Thread(target=my_log)
-    th2 = threading.Thread(target=my_pow)
-    th3 = threading.Thread(target=my_fact)
-
-    th1.start()
-    th2.start()
-    th3.start()
-
-    th1.join()
-    th2.join()
-    th3.join()
+    i = 0
+    local_result = [1]
+    while local_result[i] > E:
+        local_result.append(calculate_nextpart(local_result, x))
+        i += 1
+    
+    target["sum_row_2"] = sum(local_result)
 
 
 def main():
-    x = 10
-    i = 0
-    while results[i] > E:
-        results.append(0)
-        calculate_part(results, i + 1, x, i + 1)
-        i += 1
+    part_of_rows = {"sum_row_1": 0, "sum_row_2": 0}
 
-    print(f"x = {x}")
-    print(round(sum(results), 5))
-    print(round(sum(results), 5) == calculate_sum(x))
+    th1 = Thread(target=calculate_row_1, args=(part_of_rows, 1))
+    th2 = Thread(target=calculate_row_2, args=(part_of_rows, 0.7))
+
+    th1.start()
+    th2.start()
+
+    th1.join()
+    th2.join()
+
+    print(f"Результат {part_of_rows}")
 
 
 if __name__ == "__main__":
     main()
+
